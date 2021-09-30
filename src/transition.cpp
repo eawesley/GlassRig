@@ -13,32 +13,39 @@
 void transA(){
     // ZERO->SET Homing routine to bottom limit switch, complete when at Location = 0;
     if (!bFineHomeStop) {
-        if (digitalRead(LIMIT_BOT) && !bHomeStop) {                                                    // limit is active high
+        if (digitalRead(LIMIT_BOT) && !bHomeHalt) {                                                    // limit is active high
             motor::OvenControl(START, UP,OVENHOMESPEEDCOARSE);
+            if (sensorFailTimer == 0){
+                sensorFailTimer = millis();
+            }
+            if (millis() - sensorFailTimer > sensorFailDelay){
+                fError |= mErrEndStop;
+                sensorFailTimer = 0;
+            }
         } else if (!digitalRead(LIMIT_BOT)) {
             motor::OvenControl(START, DOWN, OVENHOMESPEEDCOARSE);
-            bHomeStop = true;
+            bHomeHalt = true;
         } else if (digitalRead(LIMIT_BOT)) {
             motor::OvenControl(STOP);
             Location = 0;
             bFineHomeStop = true;
-            bHomeStop = false;
+            bHomeHalt = false;
         }
     } else if (bFineHomeStop){
         if (homeTimer == 0) {
             homeTimer = millis();
         }
-        if ((millis() - homeTimer < 1000) && !bHomeStop) {                                                  // limit is active high
+        if ((millis() - homeTimer < 1000) && !bHomeHalt) {                                                  // limit is active high
             motor::OvenControl(START, UP, OVENHOMESPEEDCOARSE);
         } else if (!digitalRead(LIMIT_BOT)) {
             motor::OvenControl(START, DOWN, OVENHOMESPEEDFINE);
-            bHomeStop = true;
+            bHomeHalt = true;
         } else if (digitalRead(LIMIT_BOT)) {
             motor::OvenControl(STOP);
             Location = 0;
             homeTimer = 0;
             bFineHomeStop = false;
-            bHomeStop = false;
+            bHomeHalt = false;
             fState |= (mHomed | mLowLimit);
             digitalWrite(LTGREEN, HIGH);
         }
@@ -164,32 +171,32 @@ void transK() {
 void transL(){
     // COLD->SET Homing routine to bottom limit switch, complete when at Location = 0;
     if (!bFineHomeStop) {
-        if (digitalRead(LIMIT_BOT) && !bHomeStop) {                                                    // limit is active high
+        if (digitalRead(LIMIT_BOT) && !bHomeHalt) {                                                    // limit is active high
             motor::OvenControl(START, UP,OVENHOMESPEEDCOARSE);
         } else if (!digitalRead(LIMIT_BOT)) {
             motor::OvenControl(START, DOWN, OVENHOMESPEEDCOARSE);
-            bHomeStop = true;
+            bHomeHalt = true;
         } else if (digitalRead(LIMIT_BOT)) {
             motor::OvenControl(STOP);
             Location = 0;
             bFineHomeStop = true;
-            bHomeStop = false;
+            bHomeHalt = false;
         }
     } else if (bFineHomeStop){
         if (homeTimer == 0) {
             homeTimer = millis();
         }
-        if ((millis() - homeTimer < 1000) && !bHomeStop) {                                                  // limit is active high
+        if ((millis() - homeTimer < 1000) && !bHomeHalt) {                                                  // limit is active high
             motor::OvenControl(START, UP, OVENHOMESPEEDCOARSE);
         } else if (!digitalRead(LIMIT_BOT)) {
             motor::OvenControl(START, DOWN, OVENHOMESPEEDFINE);
-            bHomeStop = true;
+            bHomeHalt = true;
         } else if (digitalRead(LIMIT_BOT)) {
             motor::OvenControl(STOP);
             Location = 0;
             homeTimer = 0;
             bFineHomeStop = false;
-            bHomeStop = false;
+            bHomeHalt = false;
             fState |= (mHomed | mLowLimit);
             digitalWrite(LTGREEN, HIGH);
         }

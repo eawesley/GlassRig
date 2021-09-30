@@ -80,7 +80,7 @@ extern int8_t fDir;
 extern int32_t Location;
 extern float Locationmm;
 
-extern bool bHomeStop;
+extern bool bHomeHalt;
 extern bool bFineHomeStop;
 
 extern char transmitBuffer[128];
@@ -115,6 +115,8 @@ volatile extern bool btnRed;
 // Global timers
 volatile extern long homeTimer;
 volatile extern long homeTimerEnd;
+volatile extern long sensorFailTimer;
+extern unsigned long sensorFailDelay;
 volatile extern long btnTimerG;
 volatile extern long btnTimerR;
 volatile extern long btnLastPressG;

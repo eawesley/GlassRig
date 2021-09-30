@@ -46,7 +46,7 @@ int8_t fDir = 1;                                // Direction flag. Set this to k
 int32_t Location = 0;                           // nanometers (m*10^-9) scaled by 10^-6 to avoid FP operations in interrupt
 float Locationmm = Location;
 
-bool bHomeStop = false;                          // Flag to stop homing sequence
+bool bHomeHalt = false;                          // Flag to stop homing sequence
 bool bFineHomeStop = false;                      // Flag to start homing sequence
 
 char transmitBuffer[128];
@@ -87,6 +87,9 @@ volatile bool btnRed = false;
 volatile long homeTimer = 0;
 volatile long homeTimerEnd = 0;
 
+volatile long sensorFailTimer = 0;                          // ms - timer for detecting bottom stop sensor failure during home sequence
+unsigned long sensorFailDelay = 5000;
+
 volatile long btnTimerG = 0;
 volatile long btnTimerR = 0;
 volatile long btnLastPressG = 0;
@@ -97,8 +100,8 @@ volatile long ltFlashInt = 1000;
 
 volatile long lastTransmit = 0;
 volatile long lastSample = 0;
-unsigned int txInterval = 1000;                          // ms (must be greater than Modbus timeout in ModbusMaster.h
-unsigned int spInterval = 10;
+unsigned int txInterval = 1000;                             // ms - transmit interval (must be greater than Modbus timeout in ModbusMaster.h
+unsigned int spInterval = 10;                               // ms - sensor sampling frequency
 
 unsigned int delayTimer = 0;
 unsigned int longDelay = 5000;

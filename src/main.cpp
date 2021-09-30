@@ -41,7 +41,7 @@ void FaultCheck();
 void setup() {
 
     Initialise();
-    EtherConnect();
+    //EtherConnect();
 
 }
 
@@ -54,7 +54,7 @@ void loop() {
 
     //*/
     //------------------------------------------
-    /*
+    ///*
     while(TRUE){
 
         ButtonPoll();
