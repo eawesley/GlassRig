@@ -99,7 +99,7 @@ uint8_t W5100Class::init(void)
 	// until the reset pulse is ended.  If your hardware has a shorter
 	// reset time, this can be edited or removed.
 	delay(560);
-	//Serial.println("w5100 init");
+	//Serial.println("w5100 Init");
 
 	SPI.begin();
 	initSS();
@@ -194,7 +194,7 @@ uint8_t W5100Class::init(void)
 	}
 	SPI.endTransaction();
 	initialized = true;
-	return 1; // successful init
+	return 1; // successful Init
 }
 
 // Soft reset the Wiznet chip, by writing to its MR register reset bit

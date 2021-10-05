@@ -2,15 +2,15 @@
 // Created by Ethan Wesley on 18/11/2020.
 //
 
-#include "ovenserial.h"
+#include "OvenSerial.h"
 #include "ModbusMaster.h"
-#include "param.h"
-#include "sensors.h"
+#include "Parameters.h"
+#include "Sensors.h"
 
 
 ModbusMaster Oven;
 
-void ovenserial::UpdateTemperature(ModbusMaster &target) {
+void OvenSerial::UpdateTemperature(ModbusMaster &target) {
     uint16_t data[1];
     uint8_t result;
     result = target.readHoldingRegisters(mbTEMPERATURE, 1);
@@ -20,7 +20,7 @@ void ovenserial::UpdateTemperature(ModbusMaster &target) {
     senseData.tOven = data[0]/10.;
 }
 
-void ovenserial::ControlOutput(ModbusMaster &target, PID command) {
+void OvenSerial::ControlOutput(ModbusMaster &target, PID command) {
     uint8_t result;
     switch (command){
         case PID_ENABLE:
@@ -34,19 +34,19 @@ void ovenserial::ControlOutput(ModbusMaster &target, PID command) {
     }
 }
 
-void ovenserial::SetPoint(ModbusMaster &target, uint16_t temp) {
+void OvenSerial::SetPoint(ModbusMaster &target, uint16_t temp) {
     uint8_t result;
     target.setTransmitBuffer(0, temp*10);
     result = target.writeMultipleRegisters(mbSETPOINT, 1);
 }
 
-void ovenserial::SetRamp(ModbusMaster &target, uint16_t ramp) {
+void OvenSerial::SetRamp(ModbusMaster &target, uint16_t ramp) {
     uint8_t result;
     target.setTransmitBuffer(0, ramp*10);
     result = target.writeMultipleRegisters(mbRAMP, 1);
 }
 
-void ovenserial::HeartBeat(ModbusMaster &target){
+void OvenSerial::HeartBeat(ModbusMaster &target){
     uint8_t result;
     result = target.readHoldingRegisters(mbDEVICESTATUS, 1);
     if (result == target.ku8MBSuccess){

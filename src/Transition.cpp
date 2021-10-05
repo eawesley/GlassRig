@@ -2,12 +2,12 @@
 // Created by Ethan Wesley on 19/11/2020.
 //
 
-#include "transition.h"
+#include "Transition.h"
 #include "pins.h"
-#include "motors.h"
-#include "param.h"
-#include "ovenserial.h"
-#include "sensors.h"
+#include "Motors.h"
+#include "Parameters.h"
+#include "OvenSerial.h"
+#include "Sensors.h"
 #include <Arduino.h>
 
 void transA(){
@@ -60,9 +60,9 @@ void transB(){
     }else{
         motor::OvenControl(STOP);
         if(!DRYRUN || !DEBUG) {
-            ovenserial::SetPoint(Oven, OVENSETPOINT);
-            ovenserial::SetRamp(Oven, OVENRAMPRATE);
-            ovenserial::ControlOutput(Oven, PID_ENABLE);
+            OvenSerial::SetPoint(Oven, OVENSETPOINT);
+            OvenSerial::SetRamp(Oven, OVENRAMPRATE);
+            OvenSerial::ControlOutput(Oven, PID_ENABLE);
         }
         fState |= (mHeating);
     }
@@ -89,7 +89,7 @@ void transC(){
 
 void transD(){
     // HEATING->COLD Stop button pressed, turn off oven, lower to ready position
-    ovenserial::ControlOutput(Oven, PID_DISABLE);
+    OvenSerial::ControlOutput(Oven, PID_DISABLE);
     fState &= ~(mHeating | mAtTemp | mBotOfRun);
     if (Locationmm > OVENREADYPOS/2){
         motor::OvenControl(START, DOWN, OVENDECENTSPEED);
@@ -100,9 +100,12 @@ void transD(){
 
 void transE(){
     // READY->RUNNING Start glass rotation, delay, start oven at climb speed
-    motor::GlassControl(START, UP, GLASSROTSPEED);
-    digitalWrite(SOL3_PIN, HIGH); //TODO move to configuration definition
-    digitalWrite(VAC_RELAY_PIN, HIGH);
+
+    if(!DRYRUN && !DEBUG) {
+        motor::GlassControl(START, UP, GLASSROTSPEED);
+        digitalWrite(SOL3_PIN, HIGH); //TODO move to configuration definition
+        digitalWrite(VAC_RELAY_PIN, HIGH);
+    }
     if(delayTimer == 0){
         delayTimer = millis();
     }
@@ -117,8 +120,8 @@ void transE(){
 
 void transF(){
     // READY->COLD Stop button pressed, turn off oven, lower to 150mm
-    ovenserial::ControlOutput(Oven, PID_DISABLE);
-    ovenserial::SetPoint(Oven, 0);
+    OvenSerial::ControlOutput(Oven, PID_DISABLE);
+    OvenSerial::SetPoint(Oven, 0);
     fState &= ~(mAtTemp | mBotOfRun);
     if (Locationmm >= OVENREADYPOS/2){
         motor::OvenControl(START, DOWN, OVENDECENTSPEED);
@@ -142,8 +145,8 @@ void transH(){
 void transI(){
     // RUNNING->DROP Stop button pressed, turn off oven, start lowing oven at drop speed
     if(Locationmm >= OVENREADYPOS/2){
-        ovenserial::ControlOutput(Oven, PID_DISABLE);
-        ovenserial::SetPoint(Oven, 0);
+        OvenSerial::ControlOutput(Oven, PID_DISABLE);
+        OvenSerial::SetPoint(Oven, 0);
         motor::OvenControl(START, DOWN, OVENDECENTSPEED);
         motor::GlassControl(STOP);
         fState &= ~(mAtTemp);
@@ -153,8 +156,8 @@ void transI(){
 void transJ(){
     // COMPLETE->DROP Oven is lowered after completed moulding run
     if(Locationmm >= OVENREADYPOS/2){
-        ovenserial::ControlOutput(Oven, PID_DISABLE);
-        ovenserial::SetPoint(Oven, 0);
+        OvenSerial::ControlOutput(Oven, PID_DISABLE);
+        OvenSerial::SetPoint(Oven, 0);
         motor::OvenControl(START, DOWN, OVENDECENTSPEED);
         fState &= ~(mTopOfRun | mAtTemp);
     }
@@ -205,8 +208,8 @@ void transL(){
 
 void transFault() {
     fState = mFaultState;
-    ovenserial::ControlOutput(Oven, PID_DISABLE);
-    ovenserial::SetPoint(Oven, 0);
+    OvenSerial::ControlOutput(Oven, PID_DISABLE);
+    OvenSerial::SetPoint(Oven, 0);
     motor::GlassControl(STOP);
     digitalWrite(VAC_RELAY_PIN, LOW);
     if (Locationmm > OVENREADYPOS+5){

@@ -3,13 +3,13 @@
 //
 
 #include "pins.h"
-#include "init.h"
-#include "param.h"
-//#include "ovenserial.h"
+#include "Initialise.h"
+#include "Parameters.h"
+//#include "OvenSerial.h"
 #include <Arduino.h>
 
 // Private
-void init::PinIO(){
+void Init::PinIO(){
     // Stepper motor controller outputs
     pinMode(OVEN_STEP_PIN, OUTPUT);
     pinMode(OVEN_DIR_PIN, OUTPUT);
@@ -47,7 +47,7 @@ void init::PinIO(){
     pinMode(VAC_RELAY_PIN, OUTPUT);
 }
 
-void init::PinSet(){
+void Init::PinSet(){
     digitalWrite(SOL1_PIN, LOW);
     digitalWrite(SOL2_PIN, LOW);
     digitalWrite(SOL3_PIN, LOW);
@@ -58,7 +58,7 @@ void init::PinSet(){
     digitalWrite(LTRED, LOW);
 }
 
-void init::TimerSet(){
+void Init::TimerSet(){
     // Timer setup 3 (oven) and 4 (glass)
     // TODO: dont set prescaler here - set in start routine for rotation and oven
     unsigned char sreg;
@@ -84,7 +84,7 @@ void init::TimerSet(){
 }
 
 // Public
-void init::Begin(){
+void Init::Begin(){
     PinIO();
     PinSet();
     TimerSet();

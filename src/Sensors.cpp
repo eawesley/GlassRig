@@ -4,9 +4,9 @@
 
 #include <Arduino.h>
 #include "pins.h"
-#include "param.h"
-#include "ovenserial.h"
-#include "sensors.h"
+#include "Parameters.h"
+#include "OvenSerial.h"
+#include "Sensors.h"
 
 sensor senseData;
 
@@ -44,7 +44,7 @@ float adcMap(float val, float toLow, float toHigh){
 }
 
 void tOvenRead(){
-    ovenserial::UpdateTemperature(Oven);
+    OvenSerial::UpdateTemperature(Oven);
 }
 float tMandrelRead(){
     float average;

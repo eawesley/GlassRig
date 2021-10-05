@@ -5,7 +5,7 @@
 #ifndef INIT_H
 #define INIT_H
 
-class init {
+class Init {
 private:
     static void PinIO();
     static void PinSet();

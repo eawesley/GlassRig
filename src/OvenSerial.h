@@ -6,11 +6,11 @@
 #define OVENSERIAL_H
 
 #include "ModbusMaster.h"
-#include "param.h"
+#include "Parameters.h"
 
 extern ModbusMaster Oven;
 
-class ovenserial {
+class OvenSerial {
 private:
     static uint16_t const mbDEVICESTATUS = 153;
     static uint16_t const mbTEMPERATURE = 601;

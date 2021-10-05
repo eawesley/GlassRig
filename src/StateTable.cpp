@@ -2,8 +2,8 @@
 // Created by Ethan Wesley on 19/11/2020.
 //
 
-#include "table.h"
-#include "param.h"
+#include "StateTable.h"
+#include "Parameters.h"
 
 static const Table_Entry stateTable[] = {
         //Current    Transition     Next

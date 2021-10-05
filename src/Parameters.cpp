@@ -1,7 +1,7 @@
 //
 // Created by Ethan Wesley on 17/11/2020.
 //
-#include "param.h"
+#include "Parameters.h"
 // TODO: create struct (typedef struct) and declare as extern -
 
 bool DEBUG = FALSE;

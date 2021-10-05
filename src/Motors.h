@@ -5,7 +5,7 @@
 #ifndef MOTORS_H
 #define MOTORS_H
 
-#include "param.h"
+#include "Parameters.h"
 #include <Arduino.h>
 
 class motor{

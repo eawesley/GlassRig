@@ -1,20 +1,20 @@
 #include "pins.h"
 #include <Arduino.h>
-#include "init.h"
-#include "param.h"
-#include "ovenserial.h"
-#include "table.h"
-#include "transition.h"
-#include "logging.h"
-#include "sensors.h"
-#include "motors.h"
+#include "Initialise.h"
+#include "Parameters.h"
+#include "OvenSerial.h"
+#include "StateTable.h"
+#include "Transition.h"
+#include "Logging.h"
+#include "Sensors.h"
+#include "Motors.h"
 #include <SPI.h>
 #include <Ethernet.h>
 
 
 /*
  *
- * Last edited by Ethan 22/03/2021 Arduino 1.8.13
+ * Last edited by Ethan 30/09/2021 Arduino 1.8.13
  *
  *
  */
@@ -102,7 +102,7 @@ void RedPressed(){
 }
 
 void Initialise(){
-    //TODO: move all below to init.cpp (should only call init::Begin from setup)
+    //TODO: move all below to Init.cpp (should only call Init::Begin from setup)
 
     // Set interrupt pins
     attachInterrupt(digitalPinToInterrupt(BTNGREEN), GreenPressed, RISING);
@@ -112,7 +112,7 @@ void Initialise(){
     Serial.begin(9600);
 
     // Run pin initialisation
-    init::Begin();
+    Init::Begin();
     delay(2000); // delay for oven startup before sending commands
 
     // Initialize serial connection to oven
@@ -120,9 +120,9 @@ void Initialise(){
     Oven.begin(2, Serial2);
 
     // Initilise oven to safe startup state
-    ovenserial::ControlOutput(Oven, PID_DISABLE);
-    ovenserial::SetPoint(Oven, 0);
-    ovenserial::SetRamp(Oven, 0);
+    OvenSerial::ControlOutput(Oven, PID_DISABLE);
+    OvenSerial::SetPoint(Oven, 0);
+    OvenSerial::SetRamp(Oven, 0);
 
     currentState = ZERO;
     nextState = ZERO;
@@ -301,7 +301,7 @@ void SensorSample(){
 
 void TransmitData(){
     // transmit data over serial (TODO: transmit data to web server)
-    if (millis()-lastTransmit>txInterval) { ovenserial::HeartBeat(Oven); transmit(); lastTransmit = millis(); }
+    if (millis()-lastTransmit>txInterval) { OvenSerial::HeartBeat(Oven); /*transmit();*/ lastTransmit = millis(); }
 }
 
 void FaultCheck(){

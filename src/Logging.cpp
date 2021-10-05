@@ -2,9 +2,9 @@
 // Created by Ethan Wesley on 30/11/2020.
 //
 
-#include "logging.h"
-#include "sensors.h"
-#include "param.h"
+#include "Logging.h"
+#include "Sensors.h"
+#include "Parameters.h"
 #include <stdio.h>
 
 content message;
